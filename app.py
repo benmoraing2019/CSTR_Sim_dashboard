@@ -12,9 +12,17 @@ import time
 from schemas.model import CSTRONNXModel
 from schemas.structure import ONNXInputParams
 from schemas.config import ConfigManager
-from schemas.ui import SidebarUI, MetricsUI, PlotlyChartsUI
+from schemas.ui import SidebarUI, MetricsUI, PlotlyChartsUI, DocumentationUI
 
 st.set_page_config(page_title="CSTR Digital Twin | Real-Time SciML", page_icon="⚛️", layout="wide")
+
+st.markdown("""
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 @st.cache_resource
 def load_resources():
@@ -24,8 +32,23 @@ def load_resources():
 modelo, config = load_resources()
 coloc_cfg = config.COLOCATION_CONFIG
 
-st.title("⚡ Gemelo Digital CSTR: Physics-Informed Neural Operator (PINO)")
+st.title("Gemelo Digital CSTR: Physics-Informed Neural Operator (PINO)")
 st.markdown("Dashboard interactivo de inferencia en tiempo real exportado a **ONNX y NumPy**. Resuelve EDOs rígidas en fracciones de milisegundo.")
+
+st.markdown("""
+<a href="#teoria-pino" style="
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    background-color: #262730;
+    color: #ffffff;
+    border: 1px solid #464b5c;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+">Más información teórica</a>
+""", unsafe_allow_html=True)
 
 sidebar = SidebarUI(
     theta_i_range=coloc_cfg.theta_i_range,
@@ -81,4 +104,7 @@ if params["ejecutar"]:
     charts.render()
 
 else:
-    st.info("👈 Ajusta los parámetros en la barra lateral y presiona **'Calcular Simulación'** para visualizar.")
+    st.info("Ajusta los parámetros en la barra lateral y presiona 'Calcular Simulación' para visualizar.")
+
+doc_ui = DocumentationUI()
+doc_ui.render()
