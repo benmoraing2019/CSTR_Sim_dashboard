@@ -21,11 +21,6 @@ def ensure_2d(arr: np.ndarray | float | int) -> np.ndarray:
         return arr.reshape(-1, 1)
     return arr
 
-import numpy as np
-from dataclasses import dataclass, field
-from typing import Dict, Tuple, List
-
-from .config import ConfigManager, Log
 
 CONFIG = ConfigManager()
 
@@ -54,7 +49,6 @@ class ONNXInputParams:
 
     def __post_init__(self):
         self.name_components = sorted(self.X0.keys())
-        # Llamamos al sistema de validación de seguridad justo al instanciar
         self._validate_safety_ranges()
 
     def _check_bounds(self, var_name: str, values: np.ndarray, bounds: Tuple[float, float] | float):
@@ -64,9 +58,7 @@ class ONNXInputParams:
         if isinstance(bounds, tuple):
             min_val, max_val = bounds
             
-            # Buscamos si algún elemento del batch viola los límites
             if np.any(values < min_val) or np.any(values > max_val):
-                # Extraemos los valores exactos que fallaron para un reporte detallado
                 min_found = np.min(values)
                 max_found = np.max(values)
                 Log.warn(
@@ -75,7 +67,6 @@ class ONNXInputParams:
                     f"exceden el rango de entrenamiento seguro [{min_val}, {max_val}]."
                 )
         else:
-            # Si el límite es un float fijo, verificamos tolerancia (ej. constantes físicas)
             if not np.allclose(values, bounds, atol=1e-4):
                 Log.warn(
                     f"Desviación de constante detectada en '{var_name}': "
@@ -89,18 +80,14 @@ class ONNXInputParams:
         """
         coloc_cfg = CONFIG.COLOCATION_CONFIG
         
-        # 1. Validación de variables independientes (Tiempo y Temperaturas)
-        # Nota: tau mínimo asumimos 0.0
         self._check_bounds("tau", self.tau, (0.0, coloc_cfg.tau_max))
         self._check_bounds("theta_i", self.theta_i, coloc_cfg.theta_i_range)
         self._check_bounds("theta0", self.theta0, coloc_cfg.theta_0_range)
         
-        # 2. Validación de Concentraciones de Entrada (X_i)
         for name, values in self.X_i.items():
             if name in coloc_cfg.X_i_range:
                 self._check_bounds(f"X_i_{name}", values, coloc_cfg.X_i_range[name])
                 
-        # 3. Validación de Concentraciones Iniciales (X0)
         for name, values in self.X0.items():
             if name in coloc_cfg.X_0_range:
                 self._check_bounds(f"X0_{name}", values, coloc_cfg.X_0_range[name])

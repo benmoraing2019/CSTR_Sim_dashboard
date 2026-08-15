@@ -19,7 +19,6 @@ class CSTRONNXModel:
             
         self.model_path = str(onnx_files[0])
         
-        # onnxruntime detecta y carga el .onnx.data automáticamente si está en el mismo directorio
         self.session = ort.InferenceSession(self.model_path)
         
         self.input_name = self.session.get_inputs()[0].name
