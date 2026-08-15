@@ -1,7 +1,7 @@
 import numpy as np
 from dataclasses import dataclass, field
 from typing import Dict, Tuple, List
-from .config import ConfigManager
+from .config import ConfigManager, Log
 
 @dataclass(frozen=True)
 class ONNXInferenceConfig:
