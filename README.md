@@ -5,6 +5,8 @@
 ![ONNX](https://img.shields.io/badge/ONNX_Runtime-1.16-005CED?logo=onnx&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.30-FF4B4B?logo=streamlit&logoColor=white)
 ![SciML](https://img.shields.io/badge/Scientific-Machine_Learning-8A2BE2)
+<img width="193" height="20" alt="image" src="https://github.com/user-attachments/assets/28d336f2-557a-4854-8b43-2429479cad65" />
+
 
 Este repositorio contiene la arquitectura de inferencia y la interfaz de usuario (Dashboard) de un **Gemelo Digital** para un Reactor Continuo de Tanque Agitado (CSTR). 
 
